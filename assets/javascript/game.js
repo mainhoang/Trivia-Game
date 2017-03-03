@@ -1,17 +1,12 @@
 $(document).ready(function() {
 
     var clock = "";
-    var num = 10;
+    var num = 30;
     var waiter;
 
     var wrongs = 0;
     var rights = 0;
     var roundCount = 0;
-
-
-    var intro = $("<div></div>").addClass("intro");
-    var stage = $("<div></div>").addClass("stage");
-    var message = $("<div></div>").addClass("message");
 
     var rounds = [{
         "question": "What is the airspeed velocity of an unladen swallow?",
@@ -112,6 +107,7 @@ $(document).ready(function() {
     // create intro page with title and start btn
     function createIntro() {
 
+        var intro = $("<div></div>").addClass("intro");
         var title = $("<h1></h1>").html("Play");
         var startBtn = $("<button></button>").addClass("start btn btn-default btn-lg").html("Start");
 
@@ -124,21 +120,8 @@ $(document).ready(function() {
 
     createIntro();
 
-    // create message when timer runs out 
-    function timeOutMessage() {
-
-        wrongs++;
-
-        $(".display").empty();
-        console.log("timeOutMessage");
-        $(".display").append(message);
-        $(".message").html("Out of Time");
-
-        waiter = setTimeout(wait, 5000);
-
-    }
-
-    function wait(){
+    // wait to clear timeout & begin next round
+    function wait() {
 
         clearTimeout(waiter);
         setStage();
@@ -146,25 +129,62 @@ $(document).ready(function() {
 
     }
 
-    // if wrong answer
-    function wrongMessage() {
+    function restartTimer(){
+
+        clearInterval(clock);
+        num = 30;
+
+    }
+
+
+    // create message when timer runs out 
+    function showTimeOutMessage() {
 
         wrongs++;
+        restartTimer();
+        // clearInterval(clock);
+
+        var timeOutMessage = $("<div></div>").addClass("message");
+
 
         $(".display").empty();
-        $(".display").append(message);
+        console.log("timeOutMessage");
+        $(".display").append(timeOutMessage);
+        $(".message").html("Out of Time");
+
+        waiter = setTimeout(wait, 5000);
+
+    }
+
+    // if wrong answer
+    function showWrongMessage() {
+
+        wrongs++;
+        restartTimer();
+
+        var wrongMessage = $("<div></div>").addClass("message");
+
+        $(".display").empty();
+        $(".display").append(wrongMessage);
         $(".message").html("Nope!");
+
+        waiter = setTimeout(wait, 5000);
 
     }
 
     // if correct answer is chosen
-    function rightMessage() {
+    function showRightMessage() {
 
         rights++;
+        restartTimer();
+
+        var rightMessage = $("<div></div>").addClass("message");
 
         $(".display").empty();
-        $(".display").append(message);
+        $(".display").append(rightMessage);
         $(".message").html("You are correct!");
+
+        waiter = setTimeout(wait, 5000);
 
     }
 
@@ -177,10 +197,8 @@ $(document).ready(function() {
 
             if (num === 0) {
 
-                clearInterval(clock);
-                num = 10;   
-                timeOutMessage();
-
+                showTimeOutMessage();
+            
             } else {
 
                 num--;
@@ -196,49 +214,63 @@ $(document).ready(function() {
     function setStage() {
 
         roundCount++;
-        $("h3").empty();
-        $("h1").empty();
-        $("button").empty();
+        $(".message").empty();
 
         var currentRound = rounds[Math.floor(Math.random() * rounds.length)];
-
+        var stage = $("<div></div>").addClass("stage");
         var timerText = $("<h3>Remaining time: </h3>");
         var timerDiv = $("<span>" + num + "</span>").addClass("timer");
-        var question = $("<h1>" + currentRound.question + "</h1>");
+        var question = $("<h2>" + currentRound.question + "</h2>");
 
         $(".display").append(stage);
-
         stage.append(timerText);
         timerText.append(timerDiv);
         countDown();
-
         stage.append(question);
 
         for (var i = 0; i < currentRound.answers.length; i++) {
 
             var answers = $("<button></button>").addClass("answer btn btn-default btn-lg btn-block").html(currentRound.answers[i]);
-
             stage.append(answers);
 
         }
 
         console.log("SET STAGE", roundCount, currentRound.correct_answer);
+        $("button").on("click", function() {
+
+            console.log($(this).html());
+
+            if($(this).html() === currentRound.correct_answer && num > 0){
+
+                showRightMessage();
+
+            }else{
+
+                showWrongMessage();
+
+            }
+
+        })
 
     }
 
     // start btn
-    $(document).on("click", ".start", function() {
+    $(".start").on("click", function() {
+
+        console.log($(this));
 
         $(".display").empty();
         setStage();
-        console.log("CLICK");
 
     })
 
-    
 
 
 
+
+
+
+    console.log(wrongs)
 
 
 
