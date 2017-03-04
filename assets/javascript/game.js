@@ -8,6 +8,7 @@ $(document).ready(function() {
     var rights = 0;
     var roundCount = 0;
 
+    var alreadyAnswered = [];
     var rounds = [{
         "question": "What is the airspeed velocity of an unladen swallow?",
         "correct_answer": "24 MPH",
@@ -129,7 +130,7 @@ $(document).ready(function() {
 
     }
 
-    function restartTimer(){
+    function restartTimer() {
 
         clearInterval(clock);
         num = 30;
@@ -140,7 +141,6 @@ $(document).ready(function() {
     // create message when timer runs out 
     function showTimeOutMessage() {
 
-        wrongs++;
         restartTimer();
         // clearInterval(clock);
 
@@ -159,7 +159,6 @@ $(document).ready(function() {
     // if wrong answer
     function showWrongMessage() {
 
-        wrongs++;
         restartTimer();
 
         var wrongMessage = $("<div></div>").addClass("message");
@@ -175,7 +174,6 @@ $(document).ready(function() {
     // if correct answer is chosen
     function showRightMessage() {
 
-        rights++;
         restartTimer();
 
         var rightMessage = $("<div></div>").addClass("message");
@@ -197,8 +195,9 @@ $(document).ready(function() {
 
             if (num === 0) {
 
+                wrongs++;
                 showTimeOutMessage();
-            
+
             } else {
 
                 num--;
@@ -240,17 +239,29 @@ $(document).ready(function() {
 
             console.log($(this).html());
 
-            if($(this).html() === currentRound.correct_answer && num > 0){
+            if ($(this).html() === currentRound.correct_answer && num > 0) {
 
+                rights++;
                 showRightMessage();
 
-            }else{
+            } else {
 
+                wrongs++;
                 showWrongMessage();
 
             }
 
+            // if(rounds.length === 0)
+
         })
+
+        // console.log("WRONG", wrongs);
+        // console.log("RIGHT", rights);
+
+        rounds.splice(rounds.indexOf(currentRound), 1);
+        alreadyAnswered.push(currentRound);
+
+        console.log(rounds);
 
     }
 
@@ -264,20 +275,6 @@ $(document).ready(function() {
 
     })
 
-
-
-
-
-
-
-    console.log(wrongs)
-
-
-
-
     // create final screen with restart btn w/o reloading page 
-
-
-
 
 })
