@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
     var clock = "";
-    var num = 30;
+    var num = 10;
     var waiter;
 
     var wrongs = 0;
     var rights = 0;
-    var roundCount = 0;
+    var unanswered = 0;
 
     var alreadyAnswered = [];
     var rounds = [{
@@ -133,10 +133,9 @@ $(document).ready(function() {
     function restartTimer() {
 
         clearInterval(clock);
-        num = 30;
+        num = 10;
 
     }
-
 
     // create message when timer runs out 
     function showTimeOutMessage() {
@@ -146,13 +145,12 @@ $(document).ready(function() {
 
         var timeOutMessage = $("<div></div>").addClass("message");
 
-
         $(".display").empty();
         console.log("timeOutMessage");
         $(".display").append(timeOutMessage);
         $(".message").html("Out of Time");
 
-        waiter = setTimeout(wait, 5000);
+        waiter = setTimeout(wait, 2000);
 
     }
 
@@ -167,7 +165,7 @@ $(document).ready(function() {
         $(".display").append(wrongMessage);
         $(".message").html("Nope!");
 
-        waiter = setTimeout(wait, 5000);
+        waiter = setTimeout(wait, 2000);
 
     }
 
@@ -182,7 +180,19 @@ $(document).ready(function() {
         $(".display").append(rightMessage);
         $(".message").html("You are correct!");
 
-        waiter = setTimeout(wait, 5000);
+        waiter = setTimeout(wait, 2000);
+
+    }
+
+    // create final page with stats & restart btn
+    function showFinalPage() {
+
+        var finalMessage = $("<div></div>").addClass("message");
+
+        $(".display").empty();
+        $(".display").append(finalMessage);
+
+        $(".message").html(wrongs + "&" + rights + "&" + unanswered);
 
     }
 
@@ -195,7 +205,7 @@ $(document).ready(function() {
 
             if (num === 0) {
 
-                wrongs++;
+                unanswered++;
                 showTimeOutMessage();
 
             } else {
@@ -212,56 +222,59 @@ $(document).ready(function() {
     // onclick start btn - create jumbotron with questions, answers, timer
     function setStage() {
 
-        roundCount++;
-        $(".message").empty();
+        if (rounds.length === 0) {
 
-        var currentRound = rounds[Math.floor(Math.random() * rounds.length)];
-        var stage = $("<div></div>").addClass("stage");
-        var timerText = $("<h3>Remaining time: </h3>");
-        var timerDiv = $("<span>" + num + "</span>").addClass("timer");
-        var question = $("<h2>" + currentRound.question + "</h2>");
+            showFinalPage();
 
-        $(".display").append(stage);
-        stage.append(timerText);
-        timerText.append(timerDiv);
-        countDown();
-        stage.append(question);
+        } else {
 
-        for (var i = 0; i < currentRound.answers.length; i++) {
+            $(".message").empty();
 
-            var answers = $("<button></button>").addClass("answer btn btn-default btn-lg btn-block").html(currentRound.answers[i]);
-            stage.append(answers);
+            var currentRound = rounds[Math.floor(Math.random() * rounds.length)];
+            var stage = $("<div></div>").addClass("stage");
+            var timerText = $("<h3>Remaining time: </h3>");
+            var timerDiv = $("<span>" + num + "</span>").addClass("timer");
+            var question = $("<h2>" + currentRound.question + "</h2>");
 
-        }
+            $(".display").append(stage);
+            stage.append(timerText);
+            timerText.append(timerDiv);
+            countDown();
+            stage.append(question);
 
-        console.log("SET STAGE", roundCount, currentRound.correct_answer);
-        $("button").on("click", function() {
+            for (var i = 0; i < currentRound.answers.length; i++) {
 
-            console.log($(this).html());
-
-            if ($(this).html() === currentRound.correct_answer && num > 0) {
-
-                rights++;
-                showRightMessage();
-
-            } else {
-
-                wrongs++;
-                showWrongMessage();
+                var answers = $("<button></button>").addClass("answer btn btn-default btn-lg btn-block").html(currentRound.answers[i]);
+                stage.append(answers);
 
             }
 
-            // if(rounds.length === 0)
+            console.log("SET STAGE",currentRound.correct_answer);
+            $("button").on("click", function() {
 
-        })
+                console.log($(this).html());
 
-        // console.log("WRONG", wrongs);
-        // console.log("RIGHT", rights);
+                if ($(this).html() === currentRound.correct_answer && num > 0) {
 
-        rounds.splice(rounds.indexOf(currentRound), 1);
-        alreadyAnswered.push(currentRound);
+                    rights++;
+                    showRightMessage();
 
-        console.log(rounds);
+                } else {
+
+                    wrongs++;
+                    showWrongMessage();
+
+                }
+
+            })
+
+            rounds.splice(rounds.indexOf(currentRound), 1);
+            alreadyAnswered.push(currentRound);
+
+            console.log("ROUNDS", rounds);
+            console.log("ALREADY", alreadyAnswered);
+
+        }
 
     }
 
@@ -274,7 +287,5 @@ $(document).ready(function() {
         setStage();
 
     })
-
-    // create final screen with restart btn w/o reloading page 
 
 })
