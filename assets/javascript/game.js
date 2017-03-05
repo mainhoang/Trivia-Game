@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     var clock = "";
-    var num = 10;
+    var num = 30;
     var waiter;
 
     var wrongs = 0;
@@ -105,24 +105,32 @@ $(document).ready(function() {
         ]
     }];
 
+    var arrEmpty = false;
+
     // create intro page with title and start btn
-    function createIntro() {
+    function createIntro(){
 
-        var intro = $("<div></div>").addClass("intro");
-        var title = $("<h1></h1>").html("Play");
-        var startBtn = $("<button></button>").addClass("start btn btn-default btn-lg").html("Start");
+        $("#main-display").empty();
 
-        $(".display").append(intro);
-        intro.append(title);
+        var intro = $("<div>").addClass("intro");
+        var introTitle = $("<h1>").html("Play");
+        var startBtn = $("<button>").addClass("start btn btn-default btn-lg btn-block").html("Start");
+
+        $("#main-display").append(intro);
+        intro.append(introTitle);
         intro.append(startBtn);
-        console.log("CREATE INTRO");
+
+        $(".start").on("click", function(){
+
+            $("#main-display").empty();
+            setStage();
+
+        })
 
     }
 
-    createIntro();
-
     // wait to clear timeout & begin next round
-    function wait() {
+    function wait(){
 
         clearTimeout(waiter);
         setStage();
@@ -130,85 +138,113 @@ $(document).ready(function() {
 
     }
 
-    function restartTimer() {
+    function restartTimer(){
 
         clearInterval(clock);
-        num = 10;
+        num = 30;
 
     }
 
     // create message when timer runs out 
-    function showTimeOutMessage() {
+    function showTimeOutMessage(){
 
         restartTimer();
         // clearInterval(clock);
 
-        var timeOutMessage = $("<div></div>").addClass("message");
+        var timeOutMessage = $("<div>").addClass("message");
 
-        $(".display").empty();
+        $("#main-display").empty();
         console.log("timeOutMessage");
-        $(".display").append(timeOutMessage);
-        $(".message").html("Out of Time");
+        $("#main-display").append(timeOutMessage);
+        timeOutMessage.html("<h1>Time's Up!</h1>");
 
         waiter = setTimeout(wait, 2000);
 
     }
 
     // if wrong answer
-    function showWrongMessage() {
+    function showWrongMessage(corrAns) {
 
         restartTimer();
 
-        var wrongMessage = $("<div></div>").addClass("message");
+        var wrongMessage = $("<div>").addClass("message");
+        var wrongTitle = $("<h1>");
+        var answerDisplay = $("<p>");
 
-        $(".display").empty();
-        $(".display").append(wrongMessage);
-        $(".message").html("Nope!");
+        $("#main-display").empty();
+        $("#main-display").append(wrongMessage);
+        wrongMessage.append(wrongTitle);
+        wrongTitle.html("Nope!")
+        answerDisplay.html("The correct answer is:<br/><h3>" + corrAns + "</h3>");
+        $("#main-display").append(answerDisplay);
 
         waiter = setTimeout(wait, 2000);
 
     }
 
     // if correct answer is chosen
-    function showRightMessage() {
+    function showRightMessage(){
 
         restartTimer();
 
-        var rightMessage = $("<div></div>").addClass("message");
+        var rightMessage = $("<div>").addClass("message");
 
-        $(".display").empty();
-        $(".display").append(rightMessage);
-        $(".message").html("You are correct!");
+        $("#main-display").empty();
+        $("#main-display").append(rightMessage);
+        rightMessage.html("<h1>You are correct!</h1>");
 
         waiter = setTimeout(wait, 2000);
 
     }
 
     // create final page with stats & restart btn
-    function showFinalPage() {
+    function showFinalPage(){
 
-        var finalMessage = $("<div></div>").addClass("message");
+        var finalMessage = $("<h1>").addClass("message");
+        var stats = $("<p>");
+        var restartGameBtn = $("<button>").addClass("restartGame btn btn-default btn-lg btn-block");
 
-        $(".display").empty();
-        $(".display").append(finalMessage);
+        $("#main-display").empty();
+        $("#main-display").append(finalMessage);
+        finalMessage.html("Game Over");
+        $("#main-display").append(stats);
+        stats.html("Correct Answers: " + rights + "<br/>Incorrect Answers: " + wrongs + "<br/>Not Answered: " + unanswered);
+        $("#main-display").append(restartGameBtn);
+        restartGameBtn.html("Play Again");
 
-        $(".message").html(wrongs + "&" + rights + "&" + unanswered);
+        restartGameBtn.on("click", function(){
+
+            for(var i = 0; i < alreadyAnswered.length; i++){
+
+                rounds.push(alreadyAnswered[i]);
+
+            }
+
+            num = 30;
+            wrongs = 0;
+            rights = 0;
+            unanswered = 0;
+            alreadyAnswered = [];
+
+            setStage();
+
+        });
 
     }
 
     // create timer that counts down from 30
-    function countDown() {
+    function countDown(){
 
         clock = setInterval(decrement, 1000);
 
-        function decrement() {
+        function decrement(){
 
-            if (num === 0) {
+            if (num === 0){
 
                 unanswered++;
                 showTimeOutMessage();
 
-            } else {
+            }else{
 
                 num--;
                 $(".timer").html(num);
@@ -220,15 +256,16 @@ $(document).ready(function() {
     }
 
     // onclick start btn - create jumbotron with questions, answers, timer
-    function setStage() {
+    function setStage(){
 
-        if (rounds.length === 0) {
+        if(rounds.length === 0){
 
+            arrEmpty = true;
             showFinalPage();
 
-        } else {
+        }else{
 
-            $(".message").empty();
+            $("#main-display").empty();
 
             var currentRound = rounds[Math.floor(Math.random() * rounds.length)];
             var stage = $("<div></div>").addClass("stage");
@@ -236,56 +273,45 @@ $(document).ready(function() {
             var timerDiv = $("<span>" + num + "</span>").addClass("timer");
             var question = $("<h2>" + currentRound.question + "</h2>");
 
-            $(".display").append(stage);
-            stage.append(timerText);
+
+            $("#main-display").append(stage);
+            $("#main-display").append(timerText);
             timerText.append(timerDiv);
             countDown();
-            stage.append(question);
+            $("#main-display").append(question);
 
-            for (var i = 0; i < currentRound.answers.length; i++) {
+            for(var i = 0; i < currentRound.answers.length; i++){
 
-                var answers = $("<button></button>").addClass("answer btn btn-default btn-lg btn-block").html(currentRound.answers[i]);
-                stage.append(answers);
+                var answerBtns = $("<button></button>").addClass("answer btn btn-default btn-lg btn-block").html(currentRound.answers[i]);
+                $("#main-display").append(answerBtns);
 
             }
 
-            console.log("SET STAGE",currentRound.correct_answer);
-            $("button").on("click", function() {
+            $("button").on("click", function(){
 
                 console.log($(this).html());
 
-                if ($(this).html() === currentRound.correct_answer && num > 0) {
+                if($(this).html() === currentRound.correct_answer && num > 0) {
 
                     rights++;
                     showRightMessage();
 
-                } else {
+                }else{
 
                     wrongs++;
-                    showWrongMessage();
+                    showWrongMessage(currentRound.correct_answer);
 
                 }
 
-            })
+            });
 
             rounds.splice(rounds.indexOf(currentRound), 1);
             alreadyAnswered.push(currentRound);
-
-            console.log("ROUNDS", rounds);
-            console.log("ALREADY", alreadyAnswered);
 
         }
 
     }
 
-    // start btn
-    $(".start").on("click", function() {
+    createIntro();
 
-        console.log($(this));
-
-        $(".display").empty();
-        setStage();
-
-    })
-
-})
+});
