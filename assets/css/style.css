@@ -94,8 +94,9 @@ button:hover {
     width: 155px;
     height: 155px;
     border-radius: 50%;
-    font-size: 2em;
-    padding: 15px 50px;
+    font-size: 3em;
+    font-weight: 700;
+    line-height: 1;
     background-color: #00009c;
     box-shadow: 0px 0px 20px darkgreen
 }

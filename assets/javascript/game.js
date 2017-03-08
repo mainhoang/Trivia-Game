@@ -115,7 +115,7 @@ $(document).ready(function() {
 
         var intro = $("<div>").addClass("intro");
         var introTitle = $("<h1 id='name'>TRIVIA TIME</h1>").addClass("gradient");
-        var startBtn = $("<button>").addClass("start").html("Start");
+        var startBtn = $("<button>").addClass("start").html("PLAY");
 
         $("#main-display").append(intro);
         intro.append(introTitle);
@@ -210,7 +210,7 @@ $(document).ready(function() {
         var finalDiv = $("<div>").addClass("game-over");
         var finalMessage = $("<h2>").html("Game Over");
         var stats = $("<p>").html("Correct Answers: " + rights + "<br/>Incorrect Answers: " + wrongs + "<br/>Not Answered: " + unanswered);
-        var restartGameBtn = $("<button>").addClass("restartGame").html("Play Again");
+        var restartGameBtn = $("<button>").addClass("restartGame").html("PLAY AGAIN");
 
         $("#main-display").empty();
         $("#main-display").append(finalDiv);
@@ -244,16 +244,18 @@ $(document).ready(function() {
         clock = setInterval(decrement, 1000);
 
         function decrement() {
+
             if(num === 0){
 
                 unanswered++;
                 showTimeOutMessage(currentRound.correct_answer);
+
             }else{
+
                 num--;
                 $(".timer").html(num);
-            }
 
-            
+            }  
 
         }
 
@@ -295,7 +297,6 @@ $(document).ready(function() {
             var question = $("<h3>" + currentRound.question + "</h3>").addClass("questions");
             var btnWrapper = $("<div>").addClass("button-wrapper");
 
-
             $("#main-display").append(stage);
             stage.append(timerText);
             timerText.append(timerDiv);
@@ -303,7 +304,6 @@ $(document).ready(function() {
             stage.append(questionDiv);
             questionDiv.append(question);
             stage.append(btnWrapper);
-
 
             shuffle(currentRound.answers);
 
@@ -313,8 +313,6 @@ $(document).ready(function() {
                 btnWrapper.append(answerBtns);
 
             }
-            
-            
 
             $("button").on("click", function() {
 
