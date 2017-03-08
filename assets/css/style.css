@@ -1,0 +1,209 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100%;
+    background-image: url("../images/polygonal-blue.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    color: white;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-size: 12em;
+    font-weight: 900;
+    text-shadow: 0px 0px 20px darkgreen;
+    margin-top: 10vh;
+        margin-bottom: 5vh;
+}
+
+h2 {
+    font-size: 9em;
+    font-weight: 900;
+    text-shadow: 0px 0px 10px darkgreen;
+}
+
+h3 {
+    font-size: 3.5em;
+    text-shadow: 0px 0px 2px darkgreen;
+    line-height: 1.2;
+}
+
+h4 {
+    font-size: 2em;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+}
+
+p {
+    font-size: 3em;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    margin: 6vh 0 3vh 0;
+}
+
+button {
+    width: 50%;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+    font-size: 2.5em;
+    color: white;
+    border-radius: 50px;
+    border: 5px solid white;
+    padding: 15px 0px;
+    outline: none;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+    background-color: #1abff0;
+    box-shadow: 0px 0px 10px darkgreen;
+}
+
+button:hover {
+    background-color: #00009c;
+}
+
+#wrapper {
+    position: relative;
+    left: 10%;
+    width: 80%;
+    height: auto;
+    min-height: 80vh;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    background-color: #81de11;
+    border: 10px solid white;
+    border-radius: 50px;
+    overflow: auto;
+    box-shadow: 0px 0px 30px darkblue;
+}
+
+#main-display {
+    height: 100%;
+    padding: 50px;
+}
+
+.start,
+.restartGame {
+    width: 155px;
+    height: 155px;
+    border-radius: 50%;
+    font-size: 2em;
+    padding: 15px 50px;
+    background-color: #00009c;
+    box-shadow: 0px 0px 20px darkgreen
+}
+
+.start:hover,
+.restartGame:hover {
+    background-color: #1abff0;
+}
+
+.stage {
+    position: relative;
+    height: 100%;
+    width: 86%;
+    left: 7%;
+}
+
+.question-wrapper {
+    border: 5px solid white;
+    overflow: auto;
+    border-radius: 25px;
+    height: 250px;
+    background-color: #00009c;
+    margin: 20px 0 10px 0;
+    padding: 20px;
+    box-shadow: 0 0 10px darkgreen;
+}
+
+.message {
+    margin: 10vh 0;
+}
+
+.answer {
+    width: 50%;
+    margin: 10px 0px;
+}
+
+.game-over {
+    padding: 6vh 0;
+}
+
+.game-over p {
+    margin: 3vh 0 6vh 0;
+}
+
+@media only screen and (max-width: 1024px) {
+
+    h1 {
+        font-size: 8em;
+        margin-top: 12vh;
+        margin-bottom: 6vh;
+    }
+
+    h2 {
+        font-size: 7em;
+    }
+
+    h3 {
+        font-size: 2.5em;
+    }
+
+    h4 {
+        font-size: 1.5em;
+    }
+
+    p {
+        font-size: 2em;
+    }
+
+    button {
+        width: 100%;
+        font-size: 2em;
+        padding: 10px 0px;
+    }
+
+    #wrapper {
+        left: 5%;
+        width: 90%;
+        height: auto;
+        min-height: 90vh;
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+    }
+
+    #main-display {
+        padding: 40px 20px;
+    }
+
+    .question-wrapper {
+        margin: 20px 0 5px 0;
+    }
+
+    .stage {
+        width: 100%;
+        left: 0;
+    }
+
+    .message {
+        margin: 12vh 0;
+    }
+
+    .answer {
+        width: 100%;
+        margin: 5px 0px;
+    }
+
+    .game-over p {
+        margin: 3vh 0 4vh 0;
+    }
+
+}
+

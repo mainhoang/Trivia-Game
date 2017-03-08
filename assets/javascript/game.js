@@ -85,13 +85,13 @@ $(document).ready(function() {
         ]
     }, {
 
-        "question": "According to Sherlock Holmes, &quot;If you eliminate the impossible, whatever remains, however improbable, must be the...&quot;",
-        "correct_answer": "Truth",
+        "question": "What's my name?",
+        "correct_answer": "Mai",
         "answers": [
-            "Answer",
-            "Cause",
-            "Source",
-            "Truth"
+            "Mai",
+            "Luda",
+            "Michelle",
+            "S-N-double-O-P"
         ]
     }, {
 
@@ -105,22 +105,23 @@ $(document).ready(function() {
         ]
     }];
 
+    var currentRound;
     var arrEmpty = false;
 
-    // create intro page with title and start btn
-    function createIntro(){
+    // create intro page with title and start btn -  btn btn-default btn-lg btn-block
+    function createIntro() {
 
         $("#main-display").empty();
 
         var intro = $("<div>").addClass("intro");
-        var introTitle = $("<h1>").html("Play");
-        var startBtn = $("<button>").addClass("start btn btn-default btn-lg btn-block").html("Start");
+        var introTitle = $("<h1 id='name'>TRIVIA TIME</h1>").addClass("gradient");
+        var startBtn = $("<button>").addClass("start").html("Start");
 
         $("#main-display").append(intro);
         intro.append(introTitle);
         intro.append(startBtn);
 
-        $(".start").on("click", function(){
+        $(".start").on("click", function() {
 
             $("#main-display").empty();
             setStage();
@@ -130,7 +131,7 @@ $(document).ready(function() {
     }
 
     // wait to clear timeout & begin next round
-    function wait(){
+    function wait() {
 
         clearTimeout(waiter);
         setStage();
@@ -138,7 +139,7 @@ $(document).ready(function() {
 
     }
 
-    function restartTimer(){
+    function restartTimer() {
 
         clearInterval(clock);
         num = 30;
@@ -146,17 +147,23 @@ $(document).ready(function() {
     }
 
     // create message when timer runs out 
-    function showTimeOutMessage(){
+    function showTimeOutMessage(corrAns) {
 
         restartTimer();
         // clearInterval(clock);
 
-        var timeOutMessage = $("<div>").addClass("message");
+        var timeOutDiv = $("<div>").addClass("message");
 
         $("#main-display").empty();
-        console.log("timeOutMessage");
-        $("#main-display").append(timeOutMessage);
-        timeOutMessage.html("<h1>Time's Up!</h1>");
+        var timeOutMessage = $("<h2>").html("Time's Up!");
+        var announceAnswer = $("<p>").html("The correct answer is: ");;
+        var answer = $("<button>").html(corrAns);
+
+        $("#main-display").empty();
+        $("#main-display").append(timeOutDiv);
+        timeOutDiv.append(timeOutMessage);
+        timeOutDiv.append(announceAnswer);
+        timeOutDiv.append(answer);
 
         waiter = setTimeout(wait, 2000);
 
@@ -167,54 +174,53 @@ $(document).ready(function() {
 
         restartTimer();
 
-        var wrongMessage = $("<div>").addClass("message");
-        var wrongTitle = $("<h1>");
-        var answerDisplay = $("<p>");
+        var wrongDiv = $("<div>").addClass("message");
+        var wrongMessage = $("<h2>").html("Nope!");
+        var announceAnswer = $("<p>").html("The correct answer is: ");;
+        var answer = $("<button>").html(corrAns);
 
         $("#main-display").empty();
-        $("#main-display").append(wrongMessage);
-        wrongMessage.append(wrongTitle);
-        wrongTitle.html("Nope!")
-        answerDisplay.html("The correct answer is:<br/><h3>" + corrAns + "</h3>");
-        $("#main-display").append(answerDisplay);
+        $("#main-display").append(wrongDiv);
+        wrongDiv.append(wrongMessage);
+        wrongDiv.append(announceAnswer);
+        wrongDiv.append(answer);
 
         waiter = setTimeout(wait, 2000);
 
     }
 
     // if correct answer is chosen
-    function showRightMessage(){
+    function showRightMessage() {
 
         restartTimer();
 
-        var rightMessage = $("<div>").addClass("message");
+        var rightDiv = $("<div>").addClass("message");
 
         $("#main-display").empty();
-        $("#main-display").append(rightMessage);
-        rightMessage.html("<h1>You are correct!</h1>");
+        $("#main-display").append(rightDiv);
+        rightDiv.html("<h2>You are correct!</h2>");
 
         waiter = setTimeout(wait, 2000);
 
     }
 
     // create final page with stats & restart btn
-    function showFinalPage(){
+    function showFinalPage() {
 
-        var finalMessage = $("<h1>").addClass("message");
-        var stats = $("<p>");
-        var restartGameBtn = $("<button>").addClass("restartGame btn btn-default btn-lg btn-block");
+        var finalDiv = $("<div>").addClass("game-over");
+        var finalMessage = $("<h2>").html("Game Over");
+        var stats = $("<p>").html("Correct Answers: " + rights + "<br/>Incorrect Answers: " + wrongs + "<br/>Not Answered: " + unanswered);
+        var restartGameBtn = $("<button>").addClass("restartGame").html("Play Again");
 
         $("#main-display").empty();
-        $("#main-display").append(finalMessage);
-        finalMessage.html("Game Over");
-        $("#main-display").append(stats);
-        stats.html("Correct Answers: " + rights + "<br/>Incorrect Answers: " + wrongs + "<br/>Not Answered: " + unanswered);
-        $("#main-display").append(restartGameBtn);
-        restartGameBtn.html("Play Again");
+        $("#main-display").append(finalDiv);
+        finalDiv.append(finalMessage);
+        finalDiv.append(stats);
+        finalDiv.append(restartGameBtn);
 
-        restartGameBtn.on("click", function(){
+        restartGameBtn.on("click", function() {
 
-            for(var i = 0; i < alreadyAnswered.length; i++){
+            for (var i = 0; i < alreadyAnswered.length; i++) {
 
                 rounds.push(alreadyAnswered[i]);
 
@@ -233,70 +239,93 @@ $(document).ready(function() {
     }
 
     // create timer that counts down from 30
-    function countDown(){
+    function countDown() {
 
         clock = setInterval(decrement, 1000);
 
-        function decrement(){
-
-            if (num === 0){
+        function decrement() {
+            if(num === 0){
 
                 unanswered++;
-                showTimeOutMessage();
-
+                showTimeOutMessage(currentRound.correct_answer);
             }else{
-
                 num--;
                 $(".timer").html(num);
-
             }
+
+            
 
         }
 
     }
 
-    // onclick start btn - create jumbotron with questions, answers, timer
-    function setStage(){
+    function shuffle(answers) {
 
-        if(rounds.length === 0){
+        var i = 0;
+        var j = 0;
+        var temp = null;
+
+        for (i = answers.length - 1; i > 0; i -= 1) {
+
+            j = Math.floor(Math.random() * (i + 1));
+            temp = answers[i];
+            answers[i] = answers[j];
+            answers[j] = temp;
+        }
+
+    }
+
+    // onclick start btn - create jumbotron with questions, answers, timer
+    function setStage() {
+
+        if (rounds.length === 0) {
 
             arrEmpty = true;
             showFinalPage();
 
-        }else{
+        } else {
 
             $("#main-display").empty();
 
-            var currentRound = rounds[Math.floor(Math.random() * rounds.length)];
+            currentRound = rounds[Math.floor(Math.random() * rounds.length)];
             var stage = $("<div></div>").addClass("stage");
-            var timerText = $("<h3>Remaining time: </h3>");
+            var timerText = $("<h4>Remaining time: </h4>");
             var timerDiv = $("<span>" + num + "</span>").addClass("timer");
-            var question = $("<h2>" + currentRound.question + "</h2>");
+            var questionDiv = $("<div>").addClass("question-wrapper");
+            var question = $("<h3>" + currentRound.question + "</h3>").addClass("questions");
+            var btnWrapper = $("<div>").addClass("button-wrapper");
 
 
             $("#main-display").append(stage);
-            $("#main-display").append(timerText);
+            stage.append(timerText);
             timerText.append(timerDiv);
             countDown();
-            $("#main-display").append(question);
+            stage.append(questionDiv);
+            questionDiv.append(question);
+            stage.append(btnWrapper);
 
-            for(var i = 0; i < currentRound.answers.length; i++){
 
-                var answerBtns = $("<button></button>").addClass("answer btn btn-default btn-lg btn-block").html(currentRound.answers[i]);
-                $("#main-display").append(answerBtns);
+            shuffle(currentRound.answers);
+
+            for (var i = 0; i < currentRound.answers.length; i++) {
+
+                var answerBtns = $("<button></button>").addClass("answer btn-block").html(currentRound.answers[i]);
+                btnWrapper.append(answerBtns);
 
             }
+            
+            
 
-            $("button").on("click", function(){
+            $("button").on("click", function() {
 
                 console.log($(this).html());
 
-                if($(this).html() === currentRound.correct_answer && num > 0) {
+                if ($(this).html() === currentRound.correct_answer && num > 0) {
 
                     rights++;
                     showRightMessage();
 
-                }else{
+                } else {
 
                     wrongs++;
                     showWrongMessage(currentRound.correct_answer);
