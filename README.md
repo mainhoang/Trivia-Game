@@ -24,5 +24,5 @@ In this assignment, You'll create a Trivia game using JavaScript for the logic a
 * JavaScript
 * Jquery
 * CSS
-* Bootstrap
+* Responsive Web Design
 * HTML
